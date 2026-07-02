@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The System: Calculator</title>
+    <style>
+        :root {
+            --bg-color: #0B0E14;
+            --panel-bg: #131924;
+            --text-color: #E2E8F0;
+            --system-purple: #8B5CF6;
+            --system-blue: #06B6D4;
+            --shadow-glow: rgba(139, 92, 246, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+        }
+
+        /* Title Accent */
+        .system-title {
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .system-title h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--system-blue);
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+        }
+
+        .system-title p {
+            font-size: 0.8rem;
+            margin: 5px 0 0 0;
+            color: #64748B;
+            text-transform: uppercase;
+        }
+
+        /* Calculator Interface */
+        .calculator {
+            background-color: var(--panel-bg);
+            border: 2px solid var(--system-purple);
+            border-radius: 12px;
+            padding: 24px;
+            width: 300px;
+            box-shadow: 0 0 25px var(--shadow-glow);
+            position: relative;
+        }
+
+        .calculator::before {
+            content: "[ SYSTEM CALCULATOR ]";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--bg-color);
+            padding: 0 10px;
+            font-size: 0.75rem;
+            color: var(--system-purple);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Display Screen */
+        .display {
+            width: 100%;
+            height: 70px;
+            background-color: #070A0F;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 6px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            padding: 10px 15px;
+            text-align: right;
+            font-size: 2rem;
+            color: #00FFCC;
+            text-shadow: 0 0 5px rgba(0, 255, 204, 0.5);
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        /* Grid Setup */
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        button {
+            background-color: #1E293B;
+            border: 1px solid #334155;
+            color: var(--text-color);
+            padding: 15px 0;
+            font-size: 1.25rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+        }
+
+        button:hover {
+            background-color: var(--system-purple);
+            border-color: #A78BFA;
+            color: #FFF;
+            box-shadow: 0 0 12px var(--system-purple);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Functional Button Themes */
+        button.operator {
+            color: var(--system-blue);
+            border-color: rgba(6, 182, 212, 0.4);
+        }
+
+        button.operator:hover {
+            background-color: var(--system-blue);
+            border-color: #22D3EE;
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.6);
+        }
+
+        button.clear {
+            color: #EF4444;
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        button.clear:hover {
+            background-color: #EF4444;
+            border-color: #F87171;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+        }
+
+        button.equal {
+            grid-column: span 2;
+            background: linear-gradient(135deg, var(--system-purple), var(--system-blue));
+            border: none;
+            color: white;
+        }
+
+        button.equal:hover {
+            filter: brightness(1.2);
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.8);
+        }
+
+        /* Footer Attribution */
+        .footer {
+            margin-top: 25px;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #475569;
+            font-weight: bold;
+        }
+
+        .footer span {
+            color: var(--system-purple);
+            text-shadow: 0 0 5px rgba(139, 92, 246, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="system-title">
+        <h1>Current Rank: S-Rank</h1>
+        <p>Arise and Calculate</p>
+    </div>
+
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="operator" onclick="appendOperator('/')">÷</button>
+            <button class="operator" onclick="appendOperator('*')">×</button>
+            <button class="operator" onclick="deleteLast()">⌫</button>
+
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button class="operator" onclick="appendOperator('-')">-</button>
+
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button class="operator" onclick="appendOperator('+')">+</button>
+
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button onclick="appendNumber('.')">.</button>
+
+            <button onclick="appendNumber('0')">0</button>
+            <button class="equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        Made by <span>Darsh</span>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+        let calculationString = ''; 
+        let displayString = '0';
+        let resetOnNextInput = false;
+
+        function updateDisplay() {
+            display.innerText = displayString;
+        }
+
+        function appendNumber(num) {
+            if (displayString === '0' || resetOnNextInput) {
+                displayString = num;
+                calculationString = num;
+                resetOnNextInput = false;
+            } else {
+                if (num === '.' && displayString.endsWith('.')) return;
+                displayString += num;
+                calculationString += num;
+            }
+            updateDisplay();
+        }
+
+        function appendOperator(op) {
+            if (resetOnNextInput) resetOnNextInput = false;
+
+            // Simple mapping for display symbols vs true logic operators
+            let displaySymbol = op;
+            if (op === '*') displaySymbol = '×';
+            if (op === '/') displaySymbol = '÷';
+
+            const lastChar = calculationString.slice(-1);
+            if (['+', '-', '*', '/'].includes(lastChar)) {
+                // Replace last operator if user changes their mind
+                calculationString = calculationString.slice(0, -1) + op;
+                displayString = displayString.slice(0, -1) + displaySymbol;
+            } else {
+                calculationString += op;
+                displayString += displaySymbol;
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            calculationString = '';
+            displayString = '0';
+            updateDisplay();
+        }
+
+        function deleteLast() {
+            if (displayString.length > 1 && displayString !== '0') {
+                displayString = displayString.slice(0, -1);
+                calculationString = calculationString.slice(0, -1);
+            } else {
+                displayString = '0';
+                calculationString = '';
+            }
+            updateDisplay();
+        }
+
+        function calculate() {
+            if (!calculationString) return;
+            try {
+                // Evaluate using modern safe Function constructor
+                let result = new Function('return ' + calculationString)();
+                
+                if (result === undefined || isNaN(result)) {
+                    throw new Error();
+                }
+
+                // Format decimals safely so it doesn't break layout strings
+                if (result % 1 !== 0) {
+                    result = parseFloat(result.toFixed(4));
+                }
+
+                displayString = String(result);
+                calculationString = String(result);
+                resetOnNextInput = true;
+                updateDisplay();
+            } catch (error) {
+                display.innerText = "ERROR";
+                displayString = '0';
+                calculationString = '';
+                resetOnNextInput = true;
+            }
+        }
+    </script>
+</body>
+</html>
