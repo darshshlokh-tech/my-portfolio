@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Feelings for You</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&family=Share+Tech+Mono&display=swap');
+
+        :root {
+            --primary-pink: #ff758c;
+            --secondary-pink: #ff7eb3;
+            --neon-pink: #ff3366;
+            --dark-bg: #0f1123;
+            --panel-bg: rgba(255, 255, 255, 0.06);
+            --border-glow: rgba(255, 117, 140, 0.3);
+            --text-light: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f1123 0%, #1d1b3a 50%, #291a30 100%);
+            color: var(--text-light);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- INTRO & PROPOSAL LAYERS --- */
+        .full-screen-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000000; /* Pure Black Background */
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        #hacker-intro canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+            opacity: 0.35; /* Enhanced readability for background strings */
+        }
+
+        .intro-ui {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .hacker-text {
+            color: var(--neon-pink);
+            font-size: 3.5rem; /* Larger font size */
+            text-shadow: 0 0 25px var(--neon-pink);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .hacker-sub {
+            color: #ffffff;
+            font-size: 2rem; /* Larger font size */
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .countdown-num {
+            font-size: 8rem; /* Dramatically larger font size */
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 0 0 40px var(--neon-pink);
+            animation: zoomPulse 2s infinite ease-in-out;
+        }
+
+        #proposal-screen {
+            background: #000000; /* Matching absolute black backdrop */
+            display: none;
+        }
+
+        .prop-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5.5rem; /* Upgraded scale */
+            background: linear-gradient(to right, #ff758c, #ff3366);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 0 0 30px rgba(255, 51, 102, 0.3);
+        }
+
+        .prop-question {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem; /* Upgraded scale */
+            margin-bottom: 50px;
+            color: #e2e8f0;
+        }
+
+        .btn-group {
+            position: relative;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            min-width: 400px;
+            height: 100px;
+        }
+
+        .choice-btn {
+            padding: 15px 45px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border-radius: 35px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .yes-btn {
+            background: linear-gradient(90deg, #ff758c, #ff3366);
+            color: white;
+            box-shadow: 0 5px 25px rgba(255, 51, 102, 0.4);
+        }
+
+        .yes-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(255, 51, 102, 0.7);
+        }
+
+        .runaway-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: absolute;
+        }
+
+        /* --- MAIN HOMEPAGE CONTENT --- */
+        #main-content {
+            display: none;
+        }
+
+        header {
+            text-align: center;
+            padding: 80px 20px 40px 20px;
+            position: relative;
+        }
+
+        .feelings-tag {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--primary-pink);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .main-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 5rem;
+            margin: 10px 0;
+            background: linear-gradient(to right, #ff758c, #ff7eb3, #ffb3cd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 117, 140, 0.2);
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.8rem;
+            color: #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .japanese-phrase {
+            font-size: 1.4rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--primary-pink);
+            padding: 15px 25px;
+            display: inline-block;
+            max-width: 600px;
+            margin: 20px auto;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-align: left;
+        }
+
+        .japanese-sub {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            display: block;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(255, 117, 140, 0.05);
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-pink);
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* Flappy Plane Minigame */
+        #game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 0 auto;
+            border: 3px solid var(--primary-pink);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 25px var(--border-glow);
+        }
+
+        #gameCanvas {
+            background: linear-gradient(to bottom, #141733, #0b0c16);
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #game-ui {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(15, 17, 35, 0.85);
+            z-index: 10;
+        }
+
+        .game-btn {
+            background: linear-gradient(90deg, var(--primary-pink), var(--secondary-pink));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .game-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 117, 140, 0.6);
+        }
+
+        /* 50 Compliments Grid */
+        .grid-50 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .compliment-box {
+            aspect-ratio: 1;
+            position: relative;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .compliment-box canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 2;
+            background: #2a2040;
+        }
+
+        .compliment-text-under {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.85rem;
+            background: linear-gradient(135deg, #4f1b34, #231130);
+            color: #ffd3df;
+            font-weight: 500;
+            z-index: 1;
+            border: 1px solid rgba(255,117,140,0.2);
+            border-radius: 12px;
+        }
+
+        /* Poetry */
+        .poetry-block {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #ffe3ec;
+            padding: 30px;
+            margin: 20px 0;
+            border-top: 1px dashed rgba(255,255,255,0.15);
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+        }
+
+        .essay-paragraph {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: #cbd5e1;
+            text-indent: 30px;
+            text-align: justify;
+        }
+
+        /* Media Player */
+        .song-container {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .song-container { grid-template-columns: 1fr; }
+        }
+
+        .video-box {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .video-box iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        /* Catch Stars */
+        #star-game-area {
+            width: 100%;
+            height: 300px;
+            background: #080914;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,117,140,0.3);
+            touch-action: none;
+        }
+
+        #basket {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 18px;
+            background: linear-gradient(90deg, var(--primary-pink), var(--secondary-pink));
+            border-radius: 20px;
+            box-shadow: 0 0 15px var(--primary-pink);
+        }
+
+        .falling-element {
+            position: absolute;
+            font-size: 26px;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: rgba(10, 11, 22, 0.4);
+        }
+
+        @keyframes zoomPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        @keyframes pulseGlow {
+            from { text-shadow: 0 0 20px rgba(255, 117, 140, 0.2); }
+            to { text-shadow: 0 0 35px rgba(255, 117, 140, 0.5); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. HACKING COUNTDOWN INTRO (PURE BLACK background, NEON PINK drops) -->
+    <div id="hacker-intro" class="full-screen-overlay">
+        <canvas id="matrixCanvas"></canvas>
+        <div class="intro-ui">
+            <div class="hacker-text">For My Princess</div>
+            <div class="hacker-sub">I love you...</div>
+            <div id="countdown" class="countdown-num">3</div>
+        </div>
+    </div>
+
+    <!-- 2. INTERACTIVE PROPOSAL SCREEN -->
+    <div id="proposal-screen" class="full-screen-overlay">
+        <div class="intro-ui">
+            <h1 class="prop-title">Happy Birthday Anousha</h1>
+            <p class="prop-question">Will you accept my little gift for you?</p>
+            <div class="btn-group">
+                <button class="choice-btn yes-btn" onclick="unlockMainPage()">Yes</button>
+                <button class="choice-btn runaway-btn" id="no-btn" style="left: 140px;">No</button>
+                <button class="choice-btn runaway-btn" id="maybe-btn" style="left: 280px;">Maybe</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. MAIN HOMEPAGE CONTENT -->
+    <div id="main-content">
+        <header>
+            <span class="feelings-tag">My Feelings for You</span>
+            <h1 class="main-title">Happy Birthday Anousha</h1>
+            <div class="subtitle">(My Princess)</div>
+            
+            <div class="japanese-phrase">
+                "今日は月が綺麗ですね。"
+                <span class="japanese-sub">Kyō wa tsuki ga kireidesu ne. (The moon is beautiful tonight.)</span>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="glass-panel">
+                <h3 class="panel-title">Interactive Flight: Guide Anousha's Plane</h3>
+                <p style="color: #cbd5e1; margin-top: -15px; margin-bottom: 20px; font-size: 0.95rem;">Click the window or press Spacebar to help her navigate through safely!</p>
+                
+                <div id="game-wrapper">
+                    <canvas id="gameCanvas" width="600" height="400"></canvas>
+                    <div id="game-ui">
+                        <h3 id="ui-title" style="font-size: 1.8rem; margin-bottom: 15px; font-family: 'Playfair Display';">Ready for Takeoff</h3>
+                        <button class="game-btn" id="ui-btn" onclick="startFlappyGame()">Start Engine</button>
+                    </div>
+                </div>
+                <div style="text-align: center; font-size: 1.2rem; margin-top: 15px; font-weight: 600;" id="flappyScore">Score: 0</div>
+            </div>
+
+            <div class="glass-panel">
+                <h3 class="panel-title">Archive: 50 Hidden Compliments</h3>
+                <p style="color: #cbd5e1; margin-top: -15px; margin-bottom: 20px; font-size: 0.95rem;">Click to wipe away the covers and reveal a dynamic reason why you are completely special.</p>
+                <div class="grid-50" id="compliments-grid"></div>
+            </div>
+
+            <div class="glass-panel">
+                <h3 class="panel-title">Poetic Echoes</h3>
+                
+                <div class="poetry-block">
+                    "In English they say You're Beautiful. <br>
+                    But in poetry we say: I wish I was one of your tears, so I could be born in your eyes, run down your cheek, and die on your lips."
+                </div>
+
+                <p class="essay-paragraph">
+                    To My princess, words often feel short when trying to frame exactly what you mean to me. Getting to know you has been like discovering a quiet ray of sunshine on a stormy afternoon—completely unexpected but entirely vital. I appreciate you not just for the effortless elegance you carry into every conversation, but for the depth of your thoughts, your dynamic energy, and how safe it feels simply to be myself around you. You are not someone who can be generalized; you possess a rare spark that commands attention and leaves me constantly wanting to know you more. Thank you for being you, My princess.
+                </p>
+
+                <div style="margin-top: 45px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 25px;">
+                    <p style="font-style: italic; color: #a0aec0; font-size: 1rem;">Note: these songs reminded me completely of you while coding this page...</p>
+                    
+                    <div class="song-container">
+                        <div class="video-box">
+                            <iframe src="https://www.youtube.com/embed/_-YjO6KfEMk" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="video-box">
+                            <iframe src="https://www.youtube.com/embed/SezFNzFCeQY" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel">
+                <h3 class="panel-title">Interactive Scope: Catch the Falling Hearts</h3>
+                <p style="color: #cbd5e1; margin-top: -15px; margin-bottom: 20px; font-size: 0.95rem;">Drag your mouse or use your finger on mobile to move the receiver panel at the bottom!</p>
+                
+                <div id="star-game-area">
+                    <div id="basket"></div>
+                </div>
+                <div style="text-align: center; font-size: 1.2rem; margin-top: 15px; font-weight: 600; color: var(--primary-pink);" id="catchScore">Hearts Secured: 0</div>
+            </div>
+        </div>
+
+        <footer> 
+            Made For My Princess By Darsh
+        </footer>
+    </div>
+
+    <script>
+        // ==========================================
+        // INTRO HACKER EFFECT WITH CUSTOM MESSAGES
+        // ==========================================
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        const ctxM = matrixCanvas.getContext('2d');
+
+        function resizeMatrix() {
+            matrixCanvas.width = window.innerWidth;
+            matrixCanvas.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        // Strings loaded directly into Matrix pipeline execution
+        const dynamicWords = ["ILOVEDYOU", "MYPRINCESS", "ANOUSHA", "❤️", "✨"];
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        const fontSize = 16;
+        const columns = matrixCanvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctxM.fillStyle = 'rgba(0, 0, 0, 0.06)'; // Solid trailing fade on true black
+            ctxM.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+            ctxM.fillStyle = '#ff3366'; // Intense Neon Pink
+            ctxM.font = 'bold ' + fontSize + 'px monospace';
+
+            for(let i = 0; i < drops.length; i++) {
+                let text;
+                // Periodic injection of targeted strings into random columns
+                if(Math.random() > 0.98) {
+                    text = dynamicWords[Math.floor(Math.random() * dynamicWords.length)];
+                } else {
+                    text = chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                
+                ctxM.fillText(text, i * fontSize, drops[i] * fontSize);
+                if(drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i] += (text.length > 1 ? 0.4 : 1); // Adjust speed offset for long text words
+            }
+        }
+        let matrixInterval = setInterval(drawMatrix, 33);
+
+        // Custom Slow 2-Second Sequence Countdown Timer
+        let count = 3;
+        const countdownEl = document.getElementById('countdown');
+        let countdownTimer = setInterval(() => {
+            count--;
+            if (count > 0) {
+                countdownEl.innerText = count;
+            } else {
+                clearInterval(countdownTimer);
+                clearInterval(matrixInterval);
+                document.getElementById('hacker-intro').style.display = 'none';
+                document.getElementById('proposal-screen').style.display = 'flex';
+                initializeRunawayButtons();
+            }
+        }, 2000); // 2000ms intervals = 2 second delay frame step
+
+        // ==========================================
+        // RUNAWAY BUTTONS SYSTEM
+        // ==========================================
+        function initializeRunawayButtons() {
+            const buttons = [document.getElementById('no-btn'), document.getElementById('maybe-btn')];
+            buttons.forEach(btn => {
+                const evade = () => {
+                    const parent = btn.parentElement;
+                    const pRect = parent.getBoundingClientRect();
+                    const bRect = btn.getBoundingClientRect();
+                    
+                    const maxX = pRect.width - bRect.width;
+                    const maxY = 260; 
+                    
+                    const newX = Math.random() * maxX;
+                    const newY = (Math.random() * maxY) - 110; 
+
+                    btn.style.left = `${newX}px`;
+                    btn.style.top = `${newY}px`;
+                };
+                btn.addEventListener('mouseenter', evade);
+                btn.addEventListener('click', evade);
+            });
+        }
+
+        function unlockMainPage() {
+            document.getElementById('proposal-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            initCompliments();
+            initCatchGame();
+        }
+
+        // ==========================================
+        // COMPLIMENTS DECK GENERATOR (50 ITEMS)
+        // ==========================================
+        const lines = [
+            "Your smile perfectly updates my entire day.", "You are completely mesmerizing.", "You inspire me to improve every day.", "Your intelligence is incredibly attractive.",
+            "I love the unique way your mind works.", "You are my favorite and absolute distraction.", "My princess deserves everything good in life.", "You have the absolute prettiest laugh.",
+            "Being around you makes my heart skip beats.", "You are genuinely magical to be near.", "Your confidence is completely gorgeous.", "You make ordinary settings look extraordinary.",
+            "Every single notification from you is a highlight.", "You are perfectly and beautifully unique.", "I could easily listen to you talk for hours.", "Your eyes hold a stunning spark.",
+            "You possess an unshakeable kind of grace.", "You are more than enough exactly as you are.", "You make everyday moments unforgettable.", "You are incredibly witty and sharp.",
+            "My princess shines brighter than constellations.", "You have an exquisite style that belongs to you.", "You are the calm in my chaotic routine.", "Your kindness is profoundly beautiful.",
+            "I am completely drawn to your perspective.", "You are my absolute favorite plot twist.", "Your voice is easily my favorite melody.", "You hold an incredibly rare kind of beauty.",
+            "You are captivatingly brilliant at everything.", "I notice and appreciate every little detail of yours.", "You make my entire world infinitely better.", "You are fiercely elegant.",
+            "Just thinking of you brings immediate warmth.", "You are a masterclass in charm.", "You have a deeply generous heart.", "I admire your quiet strength.",
+            "You look completely breathtaking every day.", "You're incredibly creative and bright.", "Your energy is beautifully addictive.", "You are an absolute living masterpiece.",
+            "I easily lose track of time when thinking of you.", "You are the queen of my focus.", "You make my heart beat faster naturally.", "You are my beautiful mystery.",
+            "Your presence provides an absolute comfort.", "You are wonderfully ambiguous.", "You deserve the entire universe.", "You are my absolute favorite hello.",
+            "You possess an undeniable, beautiful charm.", "I feel incredibly lucky that you exist."
+        ];
+
+        function initCompliments() {
+            const grid = document.getElementById('compliments-grid');
+            if(grid.children.length > 0) return; 
+            
+            lines.forEach((text, index) => {
+                const box = document.createElement('div');
+                box.className = 'compliment-box';
+                
+                const textUnder = document.createElement('div');
+                textUnder.className = 'compliment-text-under';
+                textUnder.innerText = text;
+                
+                const canvas = document.createElement('canvas');
+                box.appendChild(textUnder);
+                box.appendChild(canvas);
+                grid.appendChild(box);
+                
+                const cvs = canvas;
+                const ctx = cvs.getContext('2d');
+                cvs.width = 150;
+                cvs.height = 150;
+                
+                ctx.fillStyle = '#2d1b4e';
+                ctx.fillRect(0,0,150,150);
+                ctx.fillStyle = 'rgba(255,117,140,0.15)';
+                ctx.fillRect(5,5,140,140);
+                ctx.fillStyle = '#ff758c';
+                ctx.font = 'bold 16px Poppins';
+                ctx.textAlign = 'center';
+                ctx.fillText(`#${index + 1}`, 75, 80);
+                
+                box.addEventListener('click', () => {
+                    canvas.style.transition = 'opacity 0.5s ease';
+                    canvas.style.opacity = '0';
+                    setTimeout(() => canvas.style.display = 'none', 500);
+                });
+            });
+        }
+
+        // ==========================================
+        // GAME 1: FLAPPY PLANE MINIGAME
+        // ==========================================
+        const gameCanvas = document.getElementById('gameCanvas');
+        const gameCtx = gameCanvas.getContext('2d');
+        let flappyScore = 0;
+        let gameRunning = false;
+        let planeY = 200;
+        let planeVelocity = 0;
+        let pipes = [];
+        let loopId = null;
+
+        function startFlappyGame() {
+            document.getElementById('game-ui').style.display = 'none';
+            flappyScore = 0;
+            document.getElementById('flappyScore').innerText = "Score: " + flappyScore;
+            planeY = 200;
+            planeVelocity = 0;
+            pipes = [];
+            gameRunning = true;
+            if(loopId) cancelAnimationFrame(loopId);
+            gameLoop();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if(e.code === 'Space' && gameRunning) { planeVelocity = -6; e.preventDefault(); }
+        });
+        gameCanvas.addEventListener('click', () => {
+            if(gameRunning) planeVelocity = -6;
+        });
+
+        function gameLoop() {
+            if(!gameRunning) return;
+            planeVelocity += 0.35; 
+            planeY += planeVelocity;
+            
+            gameCtx.clearRect(0,0,600,400);
+            
+            gameCtx.fillStyle = '#ff758c';
+            gameCtx.beginPath();
+            gameCtx.ellipse(80, planeY, 20, 10, 0, 0, Math.PI*2);
+            gameCtx.fill();
+            gameCtx.fillStyle = '#ffb3cd';
+            gameCtx.fillRect(65, planeY - 18, 8, 10); 
+            
+            if(pipes.length === 0 || pipes[pipes.length-1].x < 420) {
+                let gap = 130;
+                let topH = Math.random() * (200 - 40) + 40;
+                pipes.push({ x: 600, topHeight: topH, bottomY: topH + gap, passed: false });
+            }
+            
+            for(let i=pipes.length-1; i>=0; i--) {
+                pipes[i].x -= 2.5;
+                gameCtx.fillStyle = 'rgba(255,255,255,0.08)';
+                gameCtx.strokeStyle = 'rgba(255, 117, 140, 0.4)';
+                gameCtx.lineWidth = 2;
+                
+                gameCtx.fillRect(pipes[i].x, 0, 50, pipes[i].topHeight);
+                gameCtx.strokeRect(pipes[i].x, 0, 50, pipes[i].topHeight);
+                gameCtx.fillRect(pipes[i].x, pipes[i].bottomY, 50, 400 - pipes[i].bottomY);
+                gameCtx.strokeRect(pipes[i].x, pipes[i].bottomY, 50, 400 - pipes[i].bottomY);
+                
+                if(80 + 20 > pipes[i].x && 80 - 20 < pipes[i].x + 50) {
+                    if(planeY - 10 < pipes[i].topHeight || planeY + 10 > pipes[i].bottomY) {
+                        endGame();
+                    }
+                }
+                
+                if(!pipes[i].passed && pipes[i].x < 80) {
+                    pipes[i].passed = true;
+                    flappyScore++;
+                    document.getElementById('flappyScore').innerText = "Score: " + flappyScore;
+                }
+                if(pipes[i].x < -60) pipes.splice(i,1);
+            }
+            
+            if(planeY > 400 || planeY < 0) endGame();
+            loopId = requestAnimationFrame(gameLoop);
+        }
+
+        function endGame() {
+            gameRunning = false;
+            document.getElementById('ui-title').innerText = "Flight Complete!";
+            document.getElementById('ui-btn').innerText = "Fly Again";
+            document.getElementById('game-ui').style.display = 'flex';
+        }
+
+        // ==========================================
+        // GAME 2: CATCH THE STARS / HEARTS
+        // ==========================================
+        let heartsScore = 0;
+        function initCatchGame() {
+            const area = document.getElementById('star-game-area');
+            const basket = document.getElementById('basket');
+            let areaWidth = area.clientWidth;
+
+            window.addEventListener('resize', () => { areaWidth = area.clientWidth; });
+
+            const moveBasket = (clientX) => {
+                const rect = area.getBoundingClientRect();
+                let x = clientX - rect.left - 40;
+                if(x < 0) x = 0;
+                if(x > areaWidth - 80) x = areaWidth - 80;
+                basket.style.left = x + 'px';
+            };
+
+            area.addEventListener('mousemove', (e) => moveBasket(e.clientX));
+            area.addEventListener('touchmove', (e) => {
+                if(e.touches.length > 0) moveBasket(e.touches[0].clientX);
+            }, { passive: true });
+
+            setInterval(() => {
+                if(document.getElementById('main-content').style.display !== 'block') return;
+                const heart = document.createElement('div');
+                heart.className = 'falling-element';
+                heart.innerHTML = Math.random() > 0.5 ? '❤️' : '✨';
+                heart.style.left = Math.random() * (areaWidth - 30) + 'px';
+                heart.style.top = '0px';
+                area.appendChild(heart);
+                
+                let currentTop = 0;
+                const fallInterval = setInterval(() => {
+                    currentTop += 3.5;
+                    heart.style.top = currentTop + 'px';
+                    
+                    const bRect = basket.getBoundingClientRect();
+                    const hRect = heart.getBoundingClientRect();
+                    
+                    if(hRect.bottom >= bRect.top && hRect.right >= bRect.left && hRect.left <= bRect.right && hRect.top <= bRect.bottom) {
+                        heartsScore++;
+                        document.getElementById('catchScore').innerText = "Hearts Secured: " + heartsScore;
+                        clearInterval(fallInterval);
+                        heart.remove();
+                    }
+                    
+                    if(currentTop > 300) {
+                        clearInterval(fallInterval);
+                        heart.remove();
+                    }
+                }, 20);
+            }, 850);
+        }
+    </script>
+</body>
+</html>

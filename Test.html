@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Feelings for You</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --primary-pink: #ff758c;
+            --secondary-pink: #ff7eb3;
+            --dark-bg: #0f1123;
+            --panel-bg: rgba(255, 255, 255, 0.06);
+            --border-glow: rgba(255, 117, 140, 0.3);
+            --text-light: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f1123 0%, #1d1b3a 50%, #291a30 100%);
+            color: var(--text-light);
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Hero / Header Section */
+        header {
+            text-align: center;
+            padding: 80px 20px 40px 20px;
+            position: relative;
+        }
+
+        .feelings-tag {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--primary-pink);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: block;
+            animation: fadeInDown 1s ease;
+        }
+
+        .main-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            margin: 10px 0;
+            background: linear-gradient(to right, #ff758c, #ff7eb3, #ffb3cd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 117, 140, 0.2);
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.8rem;
+            color: #e2e8f0;
+            margin-bottom: 30px;
+        }
+
+        .japanese-phrase {
+            font-size: 1.4rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--primary-pink);
+            padding: 15px 25px;
+            display: inline-block;
+            max-width: 600px;
+            margin: 20px auto;
+            border-radius: 0 12px 12px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-align: left;
+        }
+
+        .japanese-sub {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            display: block;
+            margin-top: 5px;
+            letter-spacing: 1px;
+        }
+
+        /* Container & Layout Panels */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 50px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--primary-pink);
+            margin-top: 0;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        /* Flappy Plane Minigame */
+        #game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            margin: 0 auto;
+            border: 3px solid var(--primary-pink);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 25px var(--border-glow);
+        }
+
+        #gameCanvas {
+            background: linear-gradient(to bottom, #141733, #0b0c16);
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        #game-ui {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(15, 17, 35, 0.85);
+            z-index: 10;
+        }
+
+        .game-btn {
+            background: linear-gradient(90deg, var(--primary-pink), var(--secondary-pink));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 117, 140, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .game-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 117, 140, 0.6);
+        }
+
+        /* 50 Compliments Canvas Grid */
+        .grid-50 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .compliment-box {
+            aspect-ratio: 1;
+            position: relative;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .compliment-box canvas {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 2;
+            background: #2a2040;
+        }
+
+        .compliment-text-under {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            font-size: 0.85rem;
+            background: linear-gradient(135deg, #4f1b34, #231130);
+            color: #ffd3df;
+            font-weight: 500;
+            z-index: 1;
+            border: 1px solid rgba(255,117,140,0.2);
+            border-radius: 12px;
+        }
+
+        /* Poetry & Thoughtful Paragraph */
+        .poetry-block {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.45rem;
+            line-height: 1.8;
+            text-align: center;
+            color: #ffe3ec;
+            padding: 30px;
+            margin: 20px 0;
+            border-top: 1px dashed rgba(255,255,255,0.15);
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+        }
+
+        .essay-paragraph {
+            font-size: 1.15rem;
+            line-height: 2;
+            color: #cbd5e1;
+            text-indent: 30px;
+            text-align: justify;
+        }
+
+        /* Media Player Section */
+        .song-container {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .song-container { grid-template-columns: 1fr; }
+        }
+
+        .video-box {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .video-box iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+        }
+
+        /* Minigame 2: Catch the Stars */
+        #star-game-area {
+            width: 100%;
+            height: 300px;
+            background: #080914;
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255,117,140,0.3);
+            touch-action: none;
+        }
+
+        #basket {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 18px;
+            background: linear-gradient(90deg, var(--primary-pink), var(--secondary-pink));
+            border-radius: 20px;
+            box-shadow: 0 0 15px var(--primary-pink);
+        }
+
+        .falling-element {
+            position: absolute;
+            font-size: 26px;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: rgba(10, 11, 22, 0.4);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            from { text-shadow: 0 0 20px rgba(255, 117, 140, 0.2); }
+            to { text-shadow: 0 0 35px rgba(255, 117, 140, 0.5); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <span class="feelings-tag">My Feelings for You</span>
+        <h1 class="main-title">Happy Birthday Anousha</h1>
+        <div class="subtitle">(My Princess)</div>
+        
+        <div class="japanese-phrase">
+            "今日は月が綺麗ですね。"
+            <span class="japanese-sub">Kyō wa tsuki ga kireidesu ne. (The moon is beautiful tonight.)</span>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <div class="glass-panel">
+            <h3 class="panel-title">Interactive Flight: Guide Anousha's Plane</h3>
+            <p style="color: #cbd5e1; margin-top: -15px; margin-bottom: 20px; font-size: 0.95rem;">Click the window or press Spacebar to help her navigate through safely!</p>
+            
+            <div id="game-wrapper">
+                <canvas id="gameCanvas" width="600" height="400"></canvas>
+                <div id="game-ui">
+                    <h3 id="ui-title" style="font-size: 1.8rem; margin-bottom: 15px; font-family: 'Playfair Display';">Ready for Takeoff</h3>
+                    <button class="game-btn" id="ui-btn" onclick="startFlappyGame()">Start Engine</button>
+                </div>
+            </div>
+            <div style="text-align: center; font-size: 1.2rem; margin-top: 15px; font-weight: 600;" id="flappyScore">Score: 0</div>
+        </div>
+
+        <div class="glass-panel">
+            <h3 class="panel-title">Archive: 50 Hidden Compliments</h3>
+            <p style="color: #cbd5e1; margin-top: -15px; margin-bottom: 20px; font-size: 0.95rem;">Click to wipe away the covers and reveal a dynamic reason why you are completely special.</p>
+            <div class="grid-50" id="compliments-grid"></div>
+        </div>
+
+        <div class="glass-panel">
+            <h3 class="panel-title">Poetic Echoes</h3>
+            
+            <div class="poetry-block">
+                "In English they say You're Beautiful. <br>
+                But in poetry we say: I wish I was one of your tears, so I could be born in your eyes, run down your cheek, and die on your lips."
+            </div>
+
+            <p class="essay-paragraph">
+                To My princess, words often feel short when trying to frame exactly what you mean to me. Getting to know you has been like discovering a quiet ray of sunshine on a stormy afternoon—completely unexpected but entirely vital. I appreciate you not just for the effortless elegance you carry into every conversation, but for the depth of your thoughts, your dynamic energy, and how safe it feels simply to be myself around you. You are not someone who can be generalized; you possess a rare spark that commands attention and leaves me constantly wanting to know you more. Thank you for being you, My princess.
+            </p>
+
+            <div style="margin-top: 45px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 25px;">
+                <p style="font-style: italic; color: #a0aec0; font-size: 1rem;">Note: these songs reminded me completely of you while coding this page...</p>
+                
+                <div class="song-container">
+                    <div class="video-box">
+                        <iframe src="https://www.youtube.com/embed/_-YjO6KfEMk" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-box">
+                        <iframe src="https://www.youtube.com/embed/SezFNtFCeQY" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <h3 class="panel-title">Interactive Scope: Catch the Falling Hearts</h3>
+            <p style="color: #cbd5e1; margin-top: -15px; margin-bottom: 20px; font-size: 0.95rem;">Drag your mouse or use your finger on mobile to move the receiver panel at the bottom!</p>
+            
+            <div id="star-game-area">
+                <div id="basket"></div>
+            </div>
+            <div style="text-align: center; font-size: 1.2rem; margin-top: 15px; font-weight: 600; color: var(--primary-pink);" id="catchScore">Hearts Secured: 0</div>
+        </div>
+
+    </div>
+
+    <footer>
+        Made For My Princess By Darsh
+    </footer>
+
+    <script>
+        // ==========================================
+        // 1. COMPLIMENTS DECK GENERATOR (50 ITEMS)
+        // ==========================================
+        const lines = [
+            "Your smile perfectly updates my entire day.", "You are completely mesmerizing.", "You inspire me to improve every day.", "Your intelligence is incredibly attractive.",
+            "I love the unique way your mind works.", "You are my favorite and absolute distraction.", "My princess deserves everything good in life.", "You have the absolute prettiest laugh.",
+            "Being around you makes my heart skip beats.", "You are genuinely magical to be near.", "Your confidence is completely gorgeous.", "You make ordinary settings look extraordinary.",
+            "Every single notification from you is a highlight.", "You are perfectly and beautifully unique.", "I could easily listen to you talk for hours.", "Your eyes hold a stunning spark.",
+            "You possess an unshakeable kind of grace.", "You are more than enough exactly as you are.", "You make everyday moments unforgettable.", "You are incredibly witty and sharp.",
+            "My princess shines brighter than constellations.", "You have an exquisite style that belongs to you.", "You are the calm in my chaotic routine.", "Your kindness is profoundly beautiful.",
+            "I am completely drawn to your perspective.", "You are my absolute favorite plot twist.", "Your voice is easily my favorite melody.", "You hold an incredibly rare kind of beauty.",
+            "You are captivatingly brilliant at everything.", "I notice and appreciate every little detail of yours.", "You make my entire world infinitely better.", "You are fiercely elegant.",
+            "Just thinking of you brings immediate warmth.", "You are a masterclass in charm.", "You have a deeply generous heart.", "I admire your quiet strength.",
+            "You look completely breathtaking every day.", "You're incredibly creative and bright.", "Your energy is beautifully addictive.", "You are an absolute living masterpiece.",
+            "I easily lose track of time when thinking of you.", "You are the queen of my focus.", "You make my heart beat faster naturally.", "You are my beautiful mystery.",
+            "Your presence provides an absolute comfort.", "You are wonderfully ambiguous.", "You deserve the entire universe.", "You are my absolute favorite hello.",
+            "You possess an undeniable, beautiful charm.", "I feel incredibly lucky that you exist
